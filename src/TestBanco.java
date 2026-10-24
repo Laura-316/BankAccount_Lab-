@@ -21,5 +21,46 @@ public class TestBanco {
         tech.retirar(10000.0);
         System.out.println(" Maria Lopez intenta retirar $20,000:");
         maria.retirar(20000.0);
+
+        ana.aplicarInteres();
+        luis.aplicarInteres();
+        tech.aplicarInteres();
+        maria.aplicarInteres();
+
+        System.out.println("estado final");
+        ana.mostrarInfo();
+        luis.mostrarInfo();
+        tech.mostrarInfo();
+        maria.mostrarInfo();
+
+        System.out.println("\n--- PASO 6: GENERAR UN RESUMEN ---");
+
+
+        int totalCuentas = 4;
+        double saldoTotal = ana.getSaldo() + luis.getSaldo() + tech.getSaldo() + maria.getSaldo();
+        double promedioSaldo = saldoTotal / totalCuentas;
+
+
+
+        CuentaBancaria cuentaMayor = ana;
+
+        if (luis.getSaldo() > cuentaMayor.getSaldo()) {
+            cuentaMayor = luis;
+        }
+        if (tech.getSaldo() > cuentaMayor.getSaldo()) {
+            cuentaMayor = tech;
+        }
+        if (maria.getSaldo() > cuentaMayor.getSaldo()) {
+            cuentaMayor = maria;
+        }
+
+        System.out.println("Cuenta con el mayor saldo:");
+
+        System.out.println(" - Número de cuenta: " + cuentaMayor.getNumeroCuenta());
+        System.out.println(" - Titular: " + cuentaMayor.getTitular());
+        System.out.println(" - Saldo: $" + String.format("%.2f", cuentaMayor.getSaldo()));
     }
+
+
+
 }
