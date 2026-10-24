@@ -1,7 +1,6 @@
 public class CuentaCorriente extends CuentaBancaria {
-
-    private double limiteSobregiro;
-    private double porcentajeComisionSobregiro;
+    private double limiteSobregiro; // Atributo privado de la clase CuentaCorriente Private (encapsulación)
+    private double porcentajeComisionSobregiro; // Atributo privado de la clase CuentaCorriente Private (encapsulación)
 
     public CuentaCorriente(String numeroCuenta, String titular, double saldoInicial, double limiteSobregiro, double porcentajeComisionSobregiro) {
         super(numeroCuenta, titular, saldoInicial, 0.0);
@@ -12,35 +11,38 @@ public class CuentaCorriente extends CuentaBancaria {
     public CuentaCorriente(String numeroCuenta, String titular, double saldoInicial) {
         this(numeroCuenta, titular, saldoInicial, 50000.0, 5.0);
     }
-
     @Override
     public void retirar(double monto) {
-        if (monto <= (getSaldo() + limiteSobregiro)) {
-            double nuevoSaldo = getSaldo() - monto;
-            double comision = 0.0;
+        if (monto <= 0) {
+            System.out.println("Error: El monto a retirar debe ser positivo.");
+            return;
+        }
+        if (monto > getSaldo() + limiteSobregiro) {
+            System.out.println("Error: El monto supera el límite de sobregiro.");
+            return;
+        }
+        double nuevoSaldo = getSaldo() - monto;
+        double comision = 0;
 
-            if (nuevoSaldo < 0) {
-                double montoSobregirado = Math.abs(nuevoSaldo);
-                comision = montoSobregirado * (porcentajeComisionSobregiro / 100.0);
-                nuevoSaldo -= comision;
+        if (nuevoSaldo < 0) {
+            double montoSobregirado = Math.abs(nuevoSaldo);
+            comision = montoSobregirado * (porcentajeComisionSobregiro / 100.0);
+            nuevoSaldo -= comision;
+        }
+        actualizarSaldo(nuevoSaldo);
 
-                System.out.println("Retiro exitoso.");
-                System.out.println("Comisión por sobregiro: $" + String.format("%.2f", comision));
-            } else {
-                System.out.println("Retiro exitoso.");
-            }
+        System.out.println("Retiro exitoso.");
 
-            setSaldo(nuevoSaldo);
-            System.out.println("Nuevo saldo: $" + String.format("%.2f", getSaldo()));
-        } else {
-            System.out.println("Error: Saldo insuficiente. El monto supera el saldo disponible y el límite de sobregiro.");
+        if (comision > 0) {
+            System.out.printf("Comisión por sobregiro: $%.2f%n", comision);
+        }
+        System.out.printf("Nuevo saldo: $%.2f%n", getSaldo());
+    }
+        // Mostrar información de la cuenta
+        @Override
+        public void mostrarInfo() {
+            super.mostrarInfo();
+            System.out.printf("Límite de sobregiro: $%.2f%n", limiteSobregiro);
+            System.out.printf("Porcentaje de comisión por sobregiro: %.2f%%%n", porcentajeComisionSobregiro);
         }
     }
-
-    @Override
-    public void mostrarInfo() {
-        super.mostrarInfo(); // Asegúrate de que en CuentaBancaria este método se llame mostrarInfo (con 's')
-        System.out.println("Límite de Sobregiro: $" + String.format("%.2f", limiteSobregiro));
-        System.out.println("Porcentaje de Comisión por Sobregiro: " + porcentajeComisionSobregiro + "%");
-    }
-}
